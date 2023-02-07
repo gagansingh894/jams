@@ -16,6 +16,7 @@ grpcio-tools = "^1.51.1"
 boto3 = "^1.26.59"
 structlog = "^22.3.0"
 grpcio-health-checking = "^1.51.1"
+joblib = "^1.2.0"
 
 
 [build-system]
