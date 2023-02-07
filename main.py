@@ -1,4 +1,5 @@
 import asyncio
+import argparse
 import grpc
 import structlog
 
@@ -9,10 +10,10 @@ from grpc_health.v1 import health
 
 from grpc_health.v1 import health_pb2_grpc
 
-logger = structlog.getLogger("server")
+logger = structlog.getLogger('server')
 
 
-def create_server(port: int, model_artefact_path: str) -> grpc.aio.Server:
+async def serve(port: int, model_artefact_path: str) -> None:
     # create manager
     manager = Manager(model_artefact_path)
 
@@ -28,15 +29,13 @@ def create_server(port: int, model_artefact_path: str) -> grpc.aio.Server:
         health.HealthServicer(), server)
 
     server.add_insecure_port(f'[::]:{str(port)}')
+    await server.start()
+    logger.info('starting server..', **{'port': 8000})
+    await server.wait_for_termination()
 
-    return server
-
-
-async def serve():
-    treeserve_server = create_server(8000, 'artefacts/')
-    await treeserve_server.start()
-    logger.info("starting server..", **{"port": 8000})
-    await treeserve_server.wait_for_termination()
 
 if __name__ == '__main__':
-    asyncio.run(serve())
+    parser = argparse.ArgumentParser(
+        prog=''
+    )
+    asyncio.run(serve(8000, 'artefacts/'))
