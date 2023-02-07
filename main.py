@@ -1,4 +1,4 @@
-from concurrent import futures
+import asyncio
 import grpc
 import structlog
 
@@ -12,12 +12,12 @@ from grpc_health.v1 import health_pb2_grpc
 logger = structlog.getLogger("server")
 
 
-def create_server(port: int, model_artefact_path: str) -> grpc.Server:
+def create_server(port: int, model_artefact_path: str) -> grpc.aio.Server:
     # create manager
     manager = Manager(model_artefact_path)
 
     # create server
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.aio.server()
 
     # add deployment service to server
     treeserve_pb2_grpc.add_DeploymentServiceServicer_to_server(
@@ -32,8 +32,11 @@ def create_server(port: int, model_artefact_path: str) -> grpc.Server:
     return server
 
 
-if __name__ == '__main__':
+async def serve():
     treeserve_server = create_server(8000, 'artefacts/')
-    treeserve_server.start()
+    await treeserve_server.start()
     logger.info("starting server..", **{"port": 8000})
-    treeserve_server.wait_for_termination()
+    await treeserve_server.wait_for_termination()
+
+if __name__ == '__main__':
+    asyncio.run(serve())

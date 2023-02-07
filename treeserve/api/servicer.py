@@ -9,7 +9,7 @@ class DeploymentServiceServicer(treeserve_pb2_grpc.DeploymentServiceServicer):
     def __init__(self, model_manager: manager.Manager):
         self.manager = model_manager
 
-    def Deploy(self, request: treeserve_pb2.DeployRequest, context: grpc.ServicerContext) -> \
+    async def Deploy(self, request: treeserve_pb2.DeployRequest, context: grpc.ServicerContext) -> \
             treeserve_pb2.DeployResponse:
         try:
             self.manager.add_or_update_model(request.model_name)
@@ -22,11 +22,11 @@ class DeploymentServiceServicer(treeserve_pb2_grpc.DeploymentServiceServicer):
             context.set_details(f'model name: {request.model_name}')
             return treeserve_pb2.DeployResponse()
 
-    def Info(self, request: treeserve_pb2.InfoRequest, context: grpc.ServicerContext) -> treeserve_pb2.InfoResponse:
+    async def Info(self, request: treeserve_pb2.InfoRequest, context: grpc.ServicerContext) -> treeserve_pb2.InfoResponse:
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         return treeserve_pb2.InfoResponse()
 
-    def Predict(self, request: treeserve_pb2.PredictRequest, context: grpc.ServicerContext) \
+    async def Predict(self, request: treeserve_pb2.PredictRequest, context: grpc.ServicerContext) \
             -> treeserve_pb2.PredictResponse:
         try:
             predictions = self.manager.get_predictions(request)
