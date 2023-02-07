@@ -91,7 +91,7 @@ func divideAndCreatePredictionRequest(numRecords, n int, modelName string) []*tr
 
 func createPredictionRequest(numRecords, numFeatures int, modelName string) *treeserve.PredictRequest {
 	in := make(map[string][]float32)
-	for i := 0; i <= numFeatures; i++ {
+	for i := 0; i < numFeatures; i++ {
 		featureName := fmt.Sprintf("feature_%s", strconv.Itoa(i))
 		data := make([]float32, numRecords)
 		for j := 0; j < numRecords; j++ {
