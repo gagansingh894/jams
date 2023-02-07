@@ -2,28 +2,31 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/gagansingh894/pkg/pb/treeserve"
-	"golang.org/x/sync/errgroup"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"github.com/gagansingh894/treeserve/pkg/pb/treeserve"
 	"log"
 	"math"
 	"math/rand"
 	"strconv"
 	"time"
+
+	"golang.org/x/sync/errgroup"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
 
-	isParallelPtr := flag.Bool("parallel", false, " Determine whether to parallelize request ")
+	modelNamePtr := flag.String("model_name", "mymodel", "Specify the model to be used")
+	isParallelPtr := flag.Bool("parallel", false, " Determine whether to parallelize request")
 	numRecordsPtr := flag.Int("records", 300, " Number of records in a single request for which predictions are done")
 	numIterPtr := flag.Int("iter", 500, " Number of iterations for benchmarking")
 	flag.Parse()
 
 	fmt.Println("creating client")
-	conn, err := grpc.Dial("localhost:9090", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial("localhost:8000", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("failed to connect: %v", err)
 	}
@@ -51,16 +54,14 @@ func main() {
 	}
 
 	for i := 0; i < numIter; i++ {
-
-		in := createPredictionRequestInputData(rand.Intn(numRecords)+4, 125)
-		req := createPredictionRequest(in, "model_v4")
-
 		start := time.Now()
 
 		if *isParallelPtr {
-			makeParallelRequests(cbmClient, req)
+			req := divideAndCreatePredictionRequest(rand.Intn(numRecords)+4, 4, *modelNamePtr)
+			makeParallelRequests(tsClient, req)
 		} else {
-			makeSingleRequests(cbmClient, req)
+			req := createPredictionRequest(rand.Intn(numRecords)+4, 125, *modelNamePtr)
+			makeSingleRequests(tsClient, req)
 		}
 
 		elapsed := time.Since(start)
@@ -73,21 +74,13 @@ func main() {
 	fmt.Println("average records:", records/numIter)
 }
 
-func dividePredictionRequest(in *cbserving.GetPredictionsRequest, n int) []*cbserving.GetPredictionsRequest {
-	s := int(math.Ceil(float64(len(in.InputData) / n)))
-	out := make([]*cbserving.GetPredictionsRequest, n)
+func divideAndCreatePredictionRequest(numRecords, n int, modelName string) []*treeserve.PredictRequest {
+	s := int(math.Ceil(float64(numRecords / n)))
+	out := make([]*treeserve.PredictRequest, n)
 
-	t := len(in.InputData)
+	t := numRecords
 	for i := 0; i < n; i++ {
-		var inputDatas []*cbserving.GetPredictionsRequest_InputData
-		for j := 0; j < s; j++ {
-			inputDatas = append(inputDatas, in.InputData[j])
-		}
-
-		out[i] = &cbserving.GetPredictionsRequest{
-			ModelName: in.ModelName,
-			InputData: inputDatas,
-		}
+		out[i] = createPredictionRequest(t, 125, modelName)
 		t -= s
 		if t < s {
 			s = t
@@ -96,47 +89,44 @@ func dividePredictionRequest(in *cbserving.GetPredictionsRequest, n int) []*cbse
 	return out
 }
 
-func createPredictionRequestInputData(numRecords, numFeatures int) []*cbserving.GetPredictionsRequest_InputData {
-	inputData := make([]*cbserving.GetPredictionsRequest_InputData, numRecords)
-
-	for i := range inputData {
-		data := make(map[string]float32)
-		for j := 0; j < numFeatures; j++ {
-			featureName := fmt.Sprintf("feature_%s", strconv.Itoa(j))
-			data[featureName] = rand.Float32() * float32(rand.Intn(20))
+func createPredictionRequest(numRecords, numFeatures int, modelName string) *treeserve.PredictRequest {
+	in := make(map[string][]float32)
+	for i := 0; i <= numFeatures; i++ {
+		featureName := fmt.Sprintf("feature_%s", strconv.Itoa(i))
+		data := make([]float32, numRecords)
+		for j := 0; j < numRecords; j++ {
+			data[j] = rand.Float32() * float32(rand.Intn(20))
 		}
-		inputData[i] = &cbserving.GetPredictionsRequest_InputData{Input: data}
+		in[featureName] = data
 	}
 
-	return inputData
-}
-
-func createPredictionRequest(in []*cbserving.GetPredictionsRequest_InputData, modelName string) *cbserving.GetPredictionsRequest {
-	return &cbserving.GetPredictionsRequest{
-		ModelName: modelName,
-		InputData: in,
-	}
-}
-
-func makeSingleRequests(c cbserving.DeploymentServiceClient, r *cbserving.GetPredictionsRequest) {
-	_, err := c.GetPredictions(context.Background(), r)
+	jsonStr, err := json.Marshal(in)
 	if err != nil {
-		log.Fatalf("failed to call CBM Service: %v", err)
+		panic("failed to marshal")
+	}
+	return &treeserve.PredictRequest{
+		ModelName: modelName,
+		InputData: string(jsonStr),
 	}
 }
 
-func makeParallelRequests(c cbserving.DeploymentServiceClient, r *cbserving.GetPredictionsRequest) {
-	numPartitions := 4
-	reqs := dividePredictionRequest(r, numPartitions)
-	out := make([]*cbserving.GetPredictionsResponse, numPartitions)
-	g, ctx := errgroup.WithContext(context.Background())
+func makeSingleRequests(c treeserve.DeploymentServiceClient, r *treeserve.PredictRequest) {
+	_, err := c.Predict(context.Background(), r)
+	if err != nil {
+		log.Fatalf("failed to call Treeserve service: %v", err)
+	}
+}
 
+func makeParallelRequests(c treeserve.DeploymentServiceClient, r []*treeserve.PredictRequest) {
+	numPartitions := 4
+	out := make([]*treeserve.PredictResponse, numPartitions)
+	g, ctx := errgroup.WithContext(context.Background())
 	for j := 0; j < numPartitions; j++ {
 		partitionNum := j
 		g.Go(func() error {
-			pred, err := c.GetPredictions(ctx, reqs[partitionNum])
+			pred, err := c.Predict(ctx, r[partitionNum])
 			if err != nil {
-				log.Fatalf("failed to call CBM Service: %v", err)
+				log.Fatalf("failed to call Treeserve service: %v", err)
 			}
 			out[partitionNum] = pred
 			return nil
@@ -150,7 +140,7 @@ func makeParallelRequests(c cbserving.DeploymentServiceClient, r *cbserving.GetP
 	_ = combinePredictions(out)
 }
 
-func combinePredictions(in []*cbserving.GetPredictionsResponse) []float64 {
+func combinePredictions(in []*treeserve.PredictResponse) []float64 {
 	var out []float64
 	for _, predResponse := range in {
 		for _, pred := range predResponse.Predictions {

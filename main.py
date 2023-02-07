@@ -12,7 +12,7 @@ from grpc_health.v1 import health_pb2_grpc
 logger = structlog.getLogger("server")
 
 
-def create_serve(port: int, model_artefact_path: str) -> grpc.Server:
+def create_server(port: int, model_artefact_path: str) -> grpc.Server:
     # create manager
     manager = Manager(model_artefact_path)
 
@@ -33,7 +33,7 @@ def create_serve(port: int, model_artefact_path: str) -> grpc.Server:
 
 
 if __name__ == '__main__':
-    server = create_serve(8000, 'artefacts/')
-    server.start()
+    treeserve_server = create_server(8000, 'artefacts/')
+    treeserve_server.start()
     logger.info("starting server..", **{"port": 8000})
-    server.wait_for_termination()
+    treeserve_server.wait_for_termination()
