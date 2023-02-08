@@ -11,12 +11,13 @@ from treeserve.api import treeserve_pb2
 
 class Manager:
 
+    __slots__ = 'logger', 'worker_pool', 'path', 'models'
+
     def __init__(self, path: str, num_worker: int = 2):
         self.logger = structlog.getLogger(self.__class__.__name__)
         self.worker_pool = concurrent.futures.ProcessPoolExecutor(num_worker)
         self.path = path
         self.models = {}
-
 
     def _download_model(self):
         pass
