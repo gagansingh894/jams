@@ -29,11 +29,11 @@ class DeploymentServiceServicer(treeserve_pb2_grpc.DeploymentServiceServicer):
     async def Predict(self, request: treeserve_pb2.PredictRequest, context: grpc.ServicerContext) \
             -> treeserve_pb2.PredictResponse:
         try:
-            predictions = self.manager.get_predictions(request)
+            predictions = await self.manager.get_predictions(request)
             context.set_code(grpc.StatusCode.OK)
             return treeserve_pb2.PredictResponse(model_name=request.model_name, predictions=predictions)
         except Exception:
-            self.manager.get_predictions(request)
+            await self.manager.get_predictions(request)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(f'failed to get predictions for model: {request.model_name}')
             return treeserve_pb2.PredictResponse()

@@ -1,7 +1,8 @@
-import json
+import asyncio
+import concurrent.futures
+import functools
 import os
 
-import pandas as pd
 import structlog
 
 from treeserve.model_manager import utils
@@ -10,10 +11,12 @@ from treeserve.api import treeserve_pb2
 
 class Manager:
 
-    def __init__(self, path: str):
+    def __init__(self, path: str, num_worker: int = 2):
         self.logger = structlog.getLogger(self.__class__.__name__)
+        self.worker_pool = concurrent.futures.ProcessPoolExecutor(num_worker)
         self.path = path
         self.models = {}
+
 
     def _download_model(self):
         pass
@@ -34,7 +37,9 @@ class Manager:
                 return
         raise FileNotFoundError('model does not exist')
 
-    def get_predictions(self, request: treeserve_pb2.PredictRequest):
-        # convert string to json, json to dataframe, dataframe to numpy and then predict
-        data = pd.DataFrame(json.loads(request.input_data)).values
-        return self.models[request.model_name].predict(data)
+    async def get_predictions(self, request: treeserve_pb2.PredictRequest):
+        loop = asyncio.get_event_loop()
+        model = self.models[request.model_name]
+        input_data = request.input_data
+        result = await loop.run_in_executor(self.worker_pool, functools.partial(utils.predict, input_data, model))
+        return result
