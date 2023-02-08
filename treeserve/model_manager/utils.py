@@ -33,7 +33,8 @@ def loader(path: str, framework: str, task: str) -> typing.Union[catboost.CatBoo
             return m
         else:
             raise _not_implemented_error
-    elif framework == 'skpipeline':
-        return joblib.load(filename=path)
     else:
-        raise ValueError('requested framework is not supported')
+        try:
+            return joblib.load(filename=path)
+        except Exception as e:
+            raise ValueError(e)
