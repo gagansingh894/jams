@@ -7,12 +7,11 @@ import (
 	"fmt"
 	"github.com/gagansingh894/treeserve/pkg/pb/treeserve"
 	"log"
-	"math"
 	"math/rand"
 	"strconv"
+	"sync"
 	"time"
 
-	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -20,7 +19,6 @@ import (
 func main() {
 
 	modelNamePtr := flag.String("model_name", "mymodel", "Specify the model to be used")
-	isParallelPtr := flag.Bool("parallel", false, " Determine whether to parallelize request")
 	numRecordsPtr := flag.Int("records", 300, " Number of records in a single request for which predictions are done")
 	numIterPtr := flag.Int("iter", 500, " Number of iterations for benchmarking")
 	flag.Parse()
@@ -34,11 +32,6 @@ func main() {
 	defer conn.Close()
 	tsClient := treeserve.NewDeploymentServiceClient(conn)
 
-	var (
-		records   int
-		totalTime int64
-	)
-
 	numRecords := *numRecordsPtr
 	numIter := *numIterPtr
 
@@ -46,47 +39,30 @@ func main() {
 		log.Fatalf("failed to run benchmark. Minimum number of records required is 4")
 	}
 
+	fmt.Println("starting benchmark...")
+
+	var wg sync.WaitGroup
+	var records int
+
 	fmt.Println("sending requests...")
-	if *isParallelPtr {
-		fmt.Println("benchmarking using parallel mode")
-	} else {
-		fmt.Println("benchmarking using single mode")
-	}
 
+	start := time.Now()
 	for i := 0; i < numIter; i++ {
-		start := time.Now()
+		rec := rand.Intn(numRecords) + 4
 
-		if *isParallelPtr {
-			req := divideAndCreatePredictionRequest(rand.Intn(numRecords)+4, 4, *modelNamePtr)
-			makeParallelRequests(tsClient, req)
-		} else {
-			req := createPredictionRequest(rand.Intn(numRecords)+4, 125, *modelNamePtr)
-			makeSingleRequests(tsClient, req)
-		}
-
-		elapsed := time.Since(start)
-
-		records += *numRecordsPtr
-		totalTime += elapsed.Milliseconds()
+		wg.Add(1)
+		go func() {
+			req := createPredictionRequest(rec, 125, *modelNamePtr)
+			makeSingleRequest(tsClient, req)
+			records += rec
+			wg.Done()
+		}()
 	}
+	wg.Wait()
+	totalTime := time.Since(start).Milliseconds()
 
 	fmt.Println("average time taken:", totalTime/int64(numIter))
 	fmt.Println("average records:", records/numIter)
-}
-
-func divideAndCreatePredictionRequest(numRecords, n int, modelName string) []*treeserve.PredictRequest {
-	s := int(math.Ceil(float64(numRecords / n)))
-	out := make([]*treeserve.PredictRequest, n)
-
-	t := numRecords
-	for i := 0; i < n; i++ {
-		out[i] = createPredictionRequest(t, 125, modelName)
-		t -= s
-		if t < s {
-			s = t
-		}
-	}
-	return out
 }
 
 func createPredictionRequest(numRecords, numFeatures int, modelName string) *treeserve.PredictRequest {
@@ -110,42 +86,9 @@ func createPredictionRequest(numRecords, numFeatures int, modelName string) *tre
 	}
 }
 
-func makeSingleRequests(c treeserve.DeploymentServiceClient, r *treeserve.PredictRequest) {
+func makeSingleRequest(c treeserve.DeploymentServiceClient, r *treeserve.PredictRequest) {
 	_, err := c.Predict(context.Background(), r)
 	if err != nil {
 		log.Fatalf("failed to call Treeserve service: %v", err)
 	}
-}
-
-func makeParallelRequests(c treeserve.DeploymentServiceClient, r []*treeserve.PredictRequest) {
-	numPartitions := 4
-	out := make([]*treeserve.PredictResponse, numPartitions)
-	g, ctx := errgroup.WithContext(context.Background())
-	for j := 0; j < numPartitions; j++ {
-		partitionNum := j
-		g.Go(func() error {
-			pred, err := c.Predict(ctx, r[partitionNum])
-			if err != nil {
-				log.Fatalf("failed to call Treeserve service: %v", err)
-			}
-			out[partitionNum] = pred
-			return nil
-		})
-	}
-	err := g.Wait()
-	if err != nil {
-		log.Fatalf("failed to get predictions: %s", err)
-	}
-
-	_ = combinePredictions(out)
-}
-
-func combinePredictions(in []*treeserve.PredictResponse) []float64 {
-	var out []float64
-	for _, predResponse := range in {
-		for _, pred := range predResponse.Predictions {
-			out = append(out, pred)
-		}
-	}
-	return out
 }
