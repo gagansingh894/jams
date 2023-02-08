@@ -2,12 +2,12 @@ import asyncio
 import concurrent.futures
 import functools
 import os
+import typing
 
 import structlog
+from google.protobuf import timestamp_pb2
 
 from treeserve.model_manager import utils
-from treeserve.api import treeserve_pb2
-
 
 class Manager:
 
@@ -29,7 +29,16 @@ class Manager:
             path = f'{self.path}/{file_name}'
             if name == model_name:
                 model = utils.loader(path, framework, task)
-                self.models[name] = model
+                ts = timestamp_pb2.Timestamp()
+                ts.GetCurrentTime()
+                self.models[name] = {
+                    'model': model,
+                    'metadata': {
+                        'name': name,
+                        'version': version,
+                        'timestamp': ts
+                    }
+                }
                 self.logger.info('model added successfully', **{
                     'name': name,
                     'framework': framework,
@@ -38,9 +47,11 @@ class Manager:
                 return
         raise FileNotFoundError('model does not exist')
 
-    async def get_predictions(self, request: treeserve_pb2.PredictRequest):
+    def get_info(self, model_name: str) -> typing.Dict:
+        return self.models[model_name]['metadata']
+
+    async def get_predictions(self, model_name: str, input_data: str):
         loop = asyncio.get_event_loop()
-        model = self.models[request.model_name]
-        input_data = request.input_data
+        model = self.models[model_name]['model']
         result = await loop.run_in_executor(self.worker_pool, functools.partial(utils.predict, input_data, model))
         return result

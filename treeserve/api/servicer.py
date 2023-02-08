@@ -22,18 +22,25 @@ class DeploymentServiceServicer(treeserve_pb2_grpc.DeploymentServiceServicer):
             context.set_details(f'model name: {request.model_name}')
             return treeserve_pb2.DeployResponse()
 
-    async def Info(self, request: treeserve_pb2.InfoRequest, context: grpc.ServicerContext) -> treeserve_pb2.InfoResponse:
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        return treeserve_pb2.InfoResponse()
+    async def Info(self, request: treeserve_pb2.InfoRequest, context: grpc.ServicerContext) \
+            -> treeserve_pb2.InfoResponse:
+        try:
+            metadata = self.manager.get_info(request.model_name)
+            context.set_code(grpc.StatusCode.OK)
+            context.set_details(f'model name: {request.model_name}')
+            return treeserve_pb2.InfoResponse(model_name=metadata['name'], model_version=metadata['version'], created_ts=metadata['ts'])
+        except KeyError:
+            context.set_code(grpc.StatusCode.NOT_FOUND)
+            context.set_details(f'failed to get info for model: {request.model_name}')
+            return treeserve_pb2.InfoResponse()
 
     async def Predict(self, request: treeserve_pb2.PredictRequest, context: grpc.ServicerContext) \
             -> treeserve_pb2.PredictResponse:
         try:
-            predictions = await self.manager.get_predictions(request)
+            predictions = await self.manager.get_predictions(request.model_name, request.input_data)
             context.set_code(grpc.StatusCode.OK)
             return treeserve_pb2.PredictResponse(model_name=request.model_name, predictions=predictions)
         except Exception:
-            await self.manager.get_predictions(request)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(f'failed to get predictions for model: {request.model_name}')
             return treeserve_pb2.PredictResponse()
