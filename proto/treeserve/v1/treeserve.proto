@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package api.treeserve.v1;
 option go_package = "/pkg/pb/treeserve;treeserve";
 
@@ -16,10 +18,14 @@ message DeployResponse {
   string model_name = 1;
 }
 
-message InfoRequest{}
+message InfoRequest{
+  string model_name = 1;
+}
 
 message InfoResponse {
-  map<string, string> info = 1;
+  string model_name = 1;
+  string model_version = 2;
+  google.protobuf.Timestamp created_ts = 3;
 }
 
 message PredictRequest {
