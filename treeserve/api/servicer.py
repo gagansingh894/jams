@@ -28,7 +28,8 @@ class DeploymentServiceServicer(treeserve_pb2_grpc.DeploymentServiceServicer):
             metadata = self.manager.get_info(request.model_name)
             context.set_code(grpc.StatusCode.OK)
             context.set_details(f'model name: {request.model_name}')
-            return treeserve_pb2.InfoResponse(model_name=metadata['name'], model_version=metadata['version'], created_ts=metadata['ts'])
+            return treeserve_pb2.InfoResponse(model_name=metadata['name'], model_version=metadata['version'],
+                                              created_ts=metadata['timestamp'])
         except KeyError:
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details(f'failed to get info for model: {request.model_name}')
