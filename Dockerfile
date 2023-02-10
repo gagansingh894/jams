@@ -21,6 +21,6 @@ COPY poetry.lock pyproject.toml ./
 RUN poetry install
 
 # Run your app
-RUN mkdir treeserve
+RUN mkdir mldeploy
 RUN mkdir artefacts
-COPY /treeserve /app/treeserve
+COPY /mldeploy /app/mldeploy

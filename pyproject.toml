@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "treeserve"
+name = "mldeploy"
 version = "0.1.0"
 description = ""
 authors = ["gsingh <gds31.gagandeepsingh@gmail.com>"]

@@ -1,4 +1,4 @@
-module github.com/gagansingh894/treeserve
+module github.com/gagansingh894/mldeploy
 
 go 1.19
 

@@ -1,3 +1,3 @@
-# TREESERVE
+# MLDEPLOY
 
-Simple gRPC service for serving tree models
+Simple gRPC service for serving ML models

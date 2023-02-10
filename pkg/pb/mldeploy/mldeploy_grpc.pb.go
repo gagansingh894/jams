@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.12.4
-// source: proto/treeserve/v1/treeserve.proto
+// source: proto/mldeploy/v1/mldeploy.proto
 
-package treeserve
+package mldeploy
 
 import (
 	context "context"
@@ -37,7 +37,7 @@ func NewDeploymentServiceClient(cc grpc.ClientConnInterface) DeploymentServiceCl
 
 func (c *deploymentServiceClient) Deploy(ctx context.Context, in *DeployRequest, opts ...grpc.CallOption) (*DeployResponse, error) {
 	out := new(DeployResponse)
-	err := c.cc.Invoke(ctx, "/api.treeserve.v1.DeploymentService/Deploy", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.mldeploy.v1.DeploymentService/Deploy", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *deploymentServiceClient) Deploy(ctx context.Context, in *DeployRequest,
 
 func (c *deploymentServiceClient) Info(ctx context.Context, in *InfoRequest, opts ...grpc.CallOption) (*InfoResponse, error) {
 	out := new(InfoResponse)
-	err := c.cc.Invoke(ctx, "/api.treeserve.v1.DeploymentService/Info", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.mldeploy.v1.DeploymentService/Info", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (c *deploymentServiceClient) Info(ctx context.Context, in *InfoRequest, opt
 
 func (c *deploymentServiceClient) Predict(ctx context.Context, in *PredictRequest, opts ...grpc.CallOption) (*PredictResponse, error) {
 	out := new(PredictResponse)
-	err := c.cc.Invoke(ctx, "/api.treeserve.v1.DeploymentService/Predict", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.mldeploy.v1.DeploymentService/Predict", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func _DeploymentService_Deploy_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.treeserve.v1.DeploymentService/Deploy",
+		FullMethod: "/api.mldeploy.v1.DeploymentService/Deploy",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DeploymentServiceServer).Deploy(ctx, req.(*DeployRequest))
@@ -126,7 +126,7 @@ func _DeploymentService_Info_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.treeserve.v1.DeploymentService/Info",
+		FullMethod: "/api.mldeploy.v1.DeploymentService/Info",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DeploymentServiceServer).Info(ctx, req.(*InfoRequest))
@@ -144,7 +144,7 @@ func _DeploymentService_Predict_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.treeserve.v1.DeploymentService/Predict",
+		FullMethod: "/api.mldeploy.v1.DeploymentService/Predict",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DeploymentServiceServer).Predict(ctx, req.(*PredictRequest))
@@ -156,7 +156,7 @@ func _DeploymentService_Predict_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var DeploymentService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.treeserve.v1.DeploymentService",
+	ServiceName: "api.mldeploy.v1.DeploymentService",
 	HandlerType: (*DeploymentServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -173,5 +173,5 @@ var DeploymentService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/treeserve/v1/treeserve.proto",
+	Metadata: "proto/mldeploy/v1/mldeploy.proto",
 }

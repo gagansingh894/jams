@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from treeserve.api import treeserve_pb2 as treeserve__pb2
+from mldeploy.api import mldeploy_pb2 as mldeploy__pb2
 
 
 class DeploymentServiceStub(object):
@@ -15,19 +15,19 @@ class DeploymentServiceStub(object):
             channel: A grpc.Channel.
         """
         self.Deploy = channel.unary_unary(
-                '/api.treeserve.v1.DeploymentService/Deploy',
-                request_serializer=treeserve__pb2.DeployRequest.SerializeToString,
-                response_deserializer=treeserve__pb2.DeployResponse.FromString,
+                '/api.mldeploy.v1.DeploymentService/Deploy',
+                request_serializer=mldeploy__pb2.DeployRequest.SerializeToString,
+                response_deserializer=mldeploy__pb2.DeployResponse.FromString,
                 )
         self.Info = channel.unary_unary(
-                '/api.treeserve.v1.DeploymentService/Info',
-                request_serializer=treeserve__pb2.InfoRequest.SerializeToString,
-                response_deserializer=treeserve__pb2.InfoResponse.FromString,
+                '/api.mldeploy.v1.DeploymentService/Info',
+                request_serializer=mldeploy__pb2.InfoRequest.SerializeToString,
+                response_deserializer=mldeploy__pb2.InfoResponse.FromString,
                 )
         self.Predict = channel.unary_unary(
-                '/api.treeserve.v1.DeploymentService/Predict',
-                request_serializer=treeserve__pb2.PredictRequest.SerializeToString,
-                response_deserializer=treeserve__pb2.PredictResponse.FromString,
+                '/api.mldeploy.v1.DeploymentService/Predict',
+                request_serializer=mldeploy__pb2.PredictRequest.SerializeToString,
+                response_deserializer=mldeploy__pb2.PredictResponse.FromString,
                 )
 
 
@@ -57,22 +57,22 @@ def add_DeploymentServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Deploy': grpc.unary_unary_rpc_method_handler(
                     servicer.Deploy,
-                    request_deserializer=treeserve__pb2.DeployRequest.FromString,
-                    response_serializer=treeserve__pb2.DeployResponse.SerializeToString,
+                    request_deserializer=mldeploy__pb2.DeployRequest.FromString,
+                    response_serializer=mldeploy__pb2.DeployResponse.SerializeToString,
             ),
             'Info': grpc.unary_unary_rpc_method_handler(
                     servicer.Info,
-                    request_deserializer=treeserve__pb2.InfoRequest.FromString,
-                    response_serializer=treeserve__pb2.InfoResponse.SerializeToString,
+                    request_deserializer=mldeploy__pb2.InfoRequest.FromString,
+                    response_serializer=mldeploy__pb2.InfoResponse.SerializeToString,
             ),
             'Predict': grpc.unary_unary_rpc_method_handler(
                     servicer.Predict,
-                    request_deserializer=treeserve__pb2.PredictRequest.FromString,
-                    response_serializer=treeserve__pb2.PredictResponse.SerializeToString,
+                    request_deserializer=mldeploy__pb2.PredictRequest.FromString,
+                    response_serializer=mldeploy__pb2.PredictResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'api.treeserve.v1.DeploymentService', rpc_method_handlers)
+            'api.mldeploy.v1.DeploymentService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -91,9 +91,9 @@ class DeploymentService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/api.treeserve.v1.DeploymentService/Deploy',
-            treeserve__pb2.DeployRequest.SerializeToString,
-            treeserve__pb2.DeployResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/api.mldeploy.v1.DeploymentService/Deploy',
+            mldeploy__pb2.DeployRequest.SerializeToString,
+            mldeploy__pb2.DeployResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -108,9 +108,9 @@ class DeploymentService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/api.treeserve.v1.DeploymentService/Info',
-            treeserve__pb2.InfoRequest.SerializeToString,
-            treeserve__pb2.InfoResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/api.mldeploy.v1.DeploymentService/Info',
+            mldeploy__pb2.InfoRequest.SerializeToString,
+            mldeploy__pb2.InfoResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -125,8 +125,8 @@ class DeploymentService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/api.treeserve.v1.DeploymentService/Predict',
-            treeserve__pb2.PredictRequest.SerializeToString,
-            treeserve__pb2.PredictResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/api.mldeploy.v1.DeploymentService/Predict',
+            mldeploy__pb2.PredictRequest.SerializeToString,
+            mldeploy__pb2.PredictResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

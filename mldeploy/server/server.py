@@ -1,9 +1,9 @@
 import grpc
 import structlog
 
-from treeserve.api import treeserve_pb2_grpc
-from treeserve.model_manager.manager import Manager
-from treeserve.api.servicer import DeploymentServiceServicer
+from mldeploy.api import mldeploy_pb2_grpc
+from mldeploy.model_manager.manager import Manager
+from mldeploy.api.servicer import DeploymentServiceServicer
 from grpc_health.v1 import health
 
 from grpc_health.v1 import health_pb2_grpc
@@ -19,7 +19,7 @@ async def serve(port: int, model_artefact_path: str) -> None:
     server = grpc.aio.server()
 
     # add deployment service to server
-    treeserve_pb2_grpc.add_DeploymentServiceServicer_to_server(
+    mldeploy_pb2_grpc.add_DeploymentServiceServicer_to_server(
         DeploymentServiceServicer(manager), server)
 
     # add health service to server

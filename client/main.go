@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/gagansingh894/treeserve/pkg/pb/treeserve"
+	"github.com/gagansingh894/mldeploy/pkg/pb/mldeploy"
 	"log"
 	"math/rand"
 	"strconv"
@@ -30,7 +30,7 @@ func main() {
 	}
 
 	defer conn.Close()
-	tsClient := treeserve.NewDeploymentServiceClient(conn)
+	tsClient := mldeploy.NewDeploymentServiceClient(conn)
 
 	numRecords := *numRecordsPtr
 	numIter := *numIterPtr
@@ -65,7 +65,7 @@ func main() {
 	fmt.Println("average records:", records/numIter)
 }
 
-func createPredictionRequest(numRecords, numFeatures int, modelName string) *treeserve.PredictRequest {
+func createPredictionRequest(numRecords, numFeatures int, modelName string) *mldeploy.PredictRequest {
 	in := make(map[string][]float32)
 	for i := 0; i < numFeatures; i++ {
 		featureName := fmt.Sprintf("feature_%s", strconv.Itoa(i))
@@ -80,15 +80,15 @@ func createPredictionRequest(numRecords, numFeatures int, modelName string) *tre
 	if err != nil {
 		panic("failed to marshal")
 	}
-	return &treeserve.PredictRequest{
+	return &mldeploy.PredictRequest{
 		ModelName: modelName,
 		InputData: string(jsonStr),
 	}
 }
 
-func makeSingleRequest(c treeserve.DeploymentServiceClient, r *treeserve.PredictRequest) {
+func makeSingleRequest(c mldeploy.DeploymentServiceClient, r *mldeploy.PredictRequest) {
 	_, err := c.Predict(context.Background(), r)
 	if err != nil {
-		log.Fatalf("failed to call Treeserve service: %v", err)
+		log.Fatalf("failed to call mldeploy service: %v", err)
 	}
 }

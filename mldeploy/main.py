@@ -1,12 +1,12 @@
 import asyncio
 import argparse
 
-from treeserve.server import server
+from mldeploy.server import server
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        prog='treeserve',
+        prog='mldeploy',
         description='set port number and artefact path',
         add_help=True
     )

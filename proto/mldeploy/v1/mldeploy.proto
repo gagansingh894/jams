@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package api.treeserve.v1;
-option go_package = "/pkg/pb/treeserve;treeserve";
+package api.mldeploy.v1;
+option go_package = "/pkg/pb/mldeploy;mldeploy";
 
 service DeploymentService {
   rpc Deploy(DeployRequest) returns (DeployResponse);

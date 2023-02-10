@@ -7,7 +7,7 @@ import typing
 
 import structlog
 
-from treeserve.model_manager import utils
+from mldeploy.model_manager import utils
 
 
 class Manager:
