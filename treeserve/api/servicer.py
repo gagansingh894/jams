@@ -25,11 +25,10 @@ class DeploymentServiceServicer(treeserve_pb2_grpc.DeploymentServiceServicer):
     async def Info(self, request: treeserve_pb2.InfoRequest, context: grpc.ServicerContext) \
             -> treeserve_pb2.InfoResponse:
         try:
-            metadata = self.manager.get_info(request.model_name)
+            info = self.manager.get_info(request.model_name)
             context.set_code(grpc.StatusCode.OK)
             context.set_details(f'model name: {request.model_name}')
-            return treeserve_pb2.InfoResponse(model_name=metadata['name'], model_version=metadata['version'],
-                                              created_ts=metadata['timestamp'])
+            return treeserve_pb2.InfoResponse(info=info)
         except KeyError:
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details(f'failed to get info for model: {request.model_name}')
@@ -38,7 +37,11 @@ class DeploymentServiceServicer(treeserve_pb2_grpc.DeploymentServiceServicer):
     async def Predict(self, request: treeserve_pb2.PredictRequest, context: grpc.ServicerContext) \
             -> treeserve_pb2.PredictResponse:
         try:
-            predictions = await self.manager.get_predictions(request.model_name, request.input_data)
+            if request.version == 0:
+                predictions = await self.manager.get_predictions(request.model_name, request.input_data)
+            else:
+                predictions = await self.manager.get_predictions(request.model_name, request.input_data,
+                                                                 request.version)
             context.set_code(grpc.StatusCode.OK)
             return treeserve_pb2.PredictResponse(model_name=request.model_name, predictions=predictions)
         except Exception:
