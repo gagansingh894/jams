@@ -1,8 +1,7 @@
-from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Mapping, Optional as _Optional, Union as _Union
+from typing import ClassVar as _ClassVar, Iterable as _Iterable, Optional as _Optional
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -25,22 +24,20 @@ class InfoRequest(_message.Message):
     def __init__(self, model_name: _Optional[str] = ...) -> None: ...
 
 class InfoResponse(_message.Message):
-    __slots__ = ["created_ts", "model_name", "model_version"]
-    CREATED_TS_FIELD_NUMBER: _ClassVar[int]
-    MODEL_NAME_FIELD_NUMBER: _ClassVar[int]
-    MODEL_VERSION_FIELD_NUMBER: _ClassVar[int]
-    created_ts: _timestamp_pb2.Timestamp
-    model_name: str
-    model_version: str
-    def __init__(self, model_name: _Optional[str] = ..., model_version: _Optional[str] = ..., created_ts: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    __slots__ = ["info"]
+    INFO_FIELD_NUMBER: _ClassVar[int]
+    info: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, info: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class PredictRequest(_message.Message):
-    __slots__ = ["input_data", "model_name"]
+    __slots__ = ["input_data", "model_name", "version"]
     INPUT_DATA_FIELD_NUMBER: _ClassVar[int]
     MODEL_NAME_FIELD_NUMBER: _ClassVar[int]
+    VERSION_FIELD_NUMBER: _ClassVar[int]
     input_data: str
     model_name: str
-    def __init__(self, model_name: _Optional[str] = ..., input_data: _Optional[str] = ...) -> None: ...
+    version: int
+    def __init__(self, model_name: _Optional[str] = ..., input_data: _Optional[str] = ..., version: _Optional[int] = ...) -> None: ...
 
 class PredictResponse(_message.Message):
     __slots__ = ["model_name", "predictions"]

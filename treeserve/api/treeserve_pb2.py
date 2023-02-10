@@ -11,10 +11,9 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ftreeserve.proto\x12\x10\x61pi.treeserve.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"#\n\rDeployRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\"$\n\x0e\x44\x65ployResponse\x12\x12\n\nmodel_name\x18\x01 \x01(\t\"!\n\x0bInfoRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\"i\n\x0cInfoResponse\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x15\n\rmodel_version\x18\x02 \x01(\t\x12.\n\ncreated_ts\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"8\n\x0ePredictRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x12\n\ninput_data\x18\x02 \x01(\t\":\n\x0fPredictResponse\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x13\n\x0bpredictions\x18\x03 \x03(\x01\x32\xf7\x01\n\x11\x44\x65ploymentService\x12K\n\x06\x44\x65ploy\x12\x1f.api.treeserve.v1.DeployRequest\x1a .api.treeserve.v1.DeployResponse\x12\x45\n\x04Info\x12\x1d.api.treeserve.v1.InfoRequest\x1a\x1e.api.treeserve.v1.InfoResponse\x12N\n\x07Predict\x12 .api.treeserve.v1.PredictRequest\x1a!.api.treeserve.v1.PredictResponseB\x1dZ\x1b/pkg/pb/treeserve;treeserveb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ftreeserve.proto\x12\x10\x61pi.treeserve.v1\"#\n\rDeployRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\"$\n\x0e\x44\x65ployResponse\x12\x12\n\nmodel_name\x18\x01 \x01(\t\"!\n\x0bInfoRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\"\x1c\n\x0cInfoResponse\x12\x0c\n\x04info\x18\x01 \x03(\t\"I\n\x0ePredictRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x12\n\ninput_data\x18\x02 \x01(\t\x12\x0f\n\x07version\x18\x03 \x01(\x05\":\n\x0fPredictResponse\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\x13\n\x0bpredictions\x18\x03 \x03(\x01\x32\xf7\x01\n\x11\x44\x65ploymentService\x12K\n\x06\x44\x65ploy\x12\x1f.api.treeserve.v1.DeployRequest\x1a .api.treeserve.v1.DeployResponse\x12\x45\n\x04Info\x12\x1d.api.treeserve.v1.InfoRequest\x1a\x1e.api.treeserve.v1.InfoResponse\x12N\n\x07Predict\x12 .api.treeserve.v1.PredictRequest\x1a!.api.treeserve.v1.PredictResponseB\x1dZ\x1b/pkg/pb/treeserve;treeserveb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'treeserve_pb2', globals())
@@ -22,18 +21,18 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z\033/pkg/pb/treeserve;treeserve'
-  _DEPLOYREQUEST._serialized_start=70
-  _DEPLOYREQUEST._serialized_end=105
-  _DEPLOYRESPONSE._serialized_start=107
-  _DEPLOYRESPONSE._serialized_end=143
-  _INFOREQUEST._serialized_start=145
-  _INFOREQUEST._serialized_end=178
-  _INFORESPONSE._serialized_start=180
-  _INFORESPONSE._serialized_end=285
-  _PREDICTREQUEST._serialized_start=287
-  _PREDICTREQUEST._serialized_end=343
-  _PREDICTRESPONSE._serialized_start=345
-  _PREDICTRESPONSE._serialized_end=403
-  _DEPLOYMENTSERVICE._serialized_start=406
-  _DEPLOYMENTSERVICE._serialized_end=653
+  _DEPLOYREQUEST._serialized_start=37
+  _DEPLOYREQUEST._serialized_end=72
+  _DEPLOYRESPONSE._serialized_start=74
+  _DEPLOYRESPONSE._serialized_end=110
+  _INFOREQUEST._serialized_start=112
+  _INFOREQUEST._serialized_end=145
+  _INFORESPONSE._serialized_start=147
+  _INFORESPONSE._serialized_end=175
+  _PREDICTREQUEST._serialized_start=177
+  _PREDICTREQUEST._serialized_end=250
+  _PREDICTRESPONSE._serialized_start=252
+  _PREDICTRESPONSE._serialized_end=310
+  _DEPLOYMENTSERVICE._serialized_start=313
+  _DEPLOYMENTSERVICE._serialized_end=560
 # @@protoc_insertion_point(module_scope)
