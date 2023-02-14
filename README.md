@@ -30,3 +30,6 @@ Alternatively, if your models are stored in some third party storage, the client
 ## EXAMPLE ARTEFACTS 
 
 By default, there are a few model artefacts present in the artefacts folder. All of them are regressor models, trained on random data. The shape of training data was **(1000000, 125)**.
+
+## BENCHMARKS
+todo
