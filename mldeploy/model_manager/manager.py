@@ -14,15 +14,12 @@ class Manager:
 
     __slots__ = 'logger', 'worker_pool', 'num_versions', 'path', 'models'
 
-    def __init__(self, path: str, num_worker: int = 2, num_versions: int = 5):
+    def __init__(self, path: str, num_worker: int = 1, num_versions: int = 5):
         self.logger = structlog.getLogger(self.__class__.__name__)
         self.worker_pool = concurrent.futures.ProcessPoolExecutor(num_worker)
         self.num_versions = num_versions
         self.path = path
         self.models = {}
-
-    def _download_model(self):
-        pass
 
     def add_or_update_model(self, model_name: str):
         for file_name in os.listdir(self.path):
