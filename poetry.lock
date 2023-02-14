@@ -1,36 +1,4 @@
 [[package]]
-name = "boto3"
-version = "1.26.59"
-description = "The AWS SDK for Python"
-category = "main"
-optional = false
-python-versions = ">= 3.7"
-
-[package.dependencies]
-botocore = ">=1.29.59,<1.30.0"
-jmespath = ">=0.7.1,<2.0.0"
-s3transfer = ">=0.6.0,<0.7.0"
-
-[package.extras]
-crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
-
-[[package]]
-name = "botocore"
-version = "1.29.59"
-description = "Low-level, data-driven core of boto 3."
-category = "main"
-optional = false
-python-versions = ">= 3.7"
-
-[package.dependencies]
-jmespath = ">=0.7.1,<2.0.0"
-python-dateutil = ">=2.1,<3.0.0"
-urllib3 = ">=1.25.4,<1.27"
-
-[package.extras]
-crt = ["awscrt (==0.15.3)"]
-
-[[package]]
 name = "catboost"
 version = "1.1.1"
 description = "Catboost Python Package"
@@ -143,14 +111,6 @@ python-versions = ">=3.7"
 grpcio = ">=1.51.1"
 protobuf = ">=4.21.6,<5.0dev"
 setuptools = "*"
-
-[[package]]
-name = "jmespath"
-version = "1.0.1"
-description = "JSON Matching Expressions"
-category = "main"
-optional = false
-python-versions = ">=3.7"
 
 [[package]]
 name = "joblib"
@@ -303,20 +263,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "s3transfer"
-version = "0.6.0"
-description = "An Amazon S3 Transfer Manager"
-category = "main"
-optional = false
-python-versions = ">= 3.7"
-
-[package.dependencies]
-botocore = ">=1.12.36,<2.0a.0"
-
-[package.extras]
-crt = ["botocore[crt] (>=1.20.29,<2.0a.0)"]
-
-[[package]]
 name = "scikit-learn"
 version = "1.2.1"
 description = "A set of python modules for machine learning and data mining"
@@ -441,19 +387,6 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
-name = "urllib3"
-version = "1.26.14"
-description = "HTTP library with thread-safe connection pooling, file post, and more."
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
-
-[package.extras]
-brotli = ["brotli (>=1.0.9)", "brotlicffi (>=0.8.0)", "brotlipy (>=0.6.0)"]
-secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "ipaddress", "pyOpenSSL (>=0.14)", "urllib3-secure-extra"]
-socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
-
-[[package]]
 name = "wheel"
 version = "0.38.4"
 description = "A built-package format for Python"
@@ -487,17 +420,9 @@ scikit-learn = ["scikit-learn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "30e28018f87fce3144168652014b67e1d21d905791dd3998074add41052cc2dc"
+content-hash = "2195c46a46f3914810d639c41fc8e78f273deec06b21d829ea7567f21510d311"
 
 [metadata.files]
-boto3 = [
-    {file = "boto3-1.26.59-py3-none-any.whl", hash = "sha256:34ee771a5cc84c16e75d4b9ef4672f51c2bafdce66ec457bbaac630b37d9cd5e"},
-    {file = "boto3-1.26.59.tar.gz", hash = "sha256:7d9cebb507fc96e6eb429621ccb2e731b75e7bbb8d6d9f0cf0c08089ee3c1ab7"},
-]
-botocore = [
-    {file = "botocore-1.29.59-py3-none-any.whl", hash = "sha256:5533644ddefaccfaa98460a63eb73e61a46aad019771226d103b1054b0df6103"},
-    {file = "botocore-1.29.59.tar.gz", hash = "sha256:bc75d41c5eecf624a2f9875483135aa78088a50c8d29847793f92756697cfed5"},
-]
 catboost = [
     {file = "catboost-1.1.1-cp310-none-macosx_10_6_universal2.whl", hash = "sha256:93532f6807228f74db9c8184a0893ab222232d23fc5b3db534e2d8fedbba42cf"},
     {file = "catboost-1.1.1-cp310-none-manylinux1_x86_64.whl", hash = "sha256:7c7364d79d5ff9deb56956560ba91a1b62b84204961d540bffd97f7b995e8cba"},
@@ -681,10 +606,6 @@ grpcio-tools = [
     {file = "grpcio_tools-1.51.1-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:f336ad9be661d92fa45940e74e8ff3d78e67ebe9b4f7ea8774b2d680c17aeb6c"},
     {file = "grpcio_tools-1.51.1-cp39-cp39-win32.whl", hash = "sha256:40ef70e8c5d0310dedff9af502b520b4c7e215bce94094527fb959150a0c594a"},
     {file = "grpcio_tools-1.51.1-cp39-cp39-win_amd64.whl", hash = "sha256:15b8acf4eaa0ebe37e2f69108de49efd935b7abe9c7e58ba737490b99906aa76"},
-]
-jmespath = [
-    {file = "jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980"},
-    {file = "jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"},
 ]
 joblib = [
     {file = "joblib-1.2.0-py3-none-any.whl", hash = "sha256:091138ed78f800342968c523bdde947e7a305b8594b910a0fea2ab83c3c6d385"},
@@ -977,10 +898,6 @@ pytz = [
     {file = "pytz-2022.7.1-py2.py3-none-any.whl", hash = "sha256:78f4f37d8198e0627c5f1143240bb0206b8691d8d7ac6d78fee88b78733f8c4a"},
     {file = "pytz-2022.7.1.tar.gz", hash = "sha256:01a0681c4b9684a28304615eba55d1ab31ae00bf68ec157ec3708a8182dbbcd0"},
 ]
-s3transfer = [
-    {file = "s3transfer-0.6.0-py3-none-any.whl", hash = "sha256:06176b74f3a15f61f1b4f25a1fc29a4429040b7647133a463da8fa5bd28d5ecd"},
-    {file = "s3transfer-0.6.0.tar.gz", hash = "sha256:2ed07d3866f523cc561bf4a00fc5535827981b117dd7876f036b0c1aca42c947"},
-]
 scikit-learn = [
     {file = "scikit-learn-1.2.1.tar.gz", hash = "sha256:fbf8a5c893c9b4b99bcc7ed8fb3e8500957a113f4101860386d06635520f7cfb"},
     {file = "scikit_learn-1.2.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:bed9f75763bd392c094bf474c7ab75a01d68b15146ea7a20c0f9ff6fb3063dad"},
@@ -1058,10 +975,6 @@ tomli = [
 typing-extensions = [
     {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
     {file = "typing_extensions-4.4.0.tar.gz", hash = "sha256:1511434bb92bf8dd198c12b1cc812e800d4181cfcb867674e0f8279cc93087aa"},
-]
-urllib3 = [
-    {file = "urllib3-1.26.14-py2.py3-none-any.whl", hash = "sha256:75edcdc2f7d85b137124a6c3c9fc3933cdeaa12ecb9a6a959f22797a0feca7e1"},
-    {file = "urllib3-1.26.14.tar.gz", hash = "sha256:076907bf8fd355cde77728471316625a4d2f7e713c125f51953bb5b3eecf4f72"},
 ]
 wheel = [
     {file = "wheel-0.38.4-py3-none-any.whl", hash = "sha256:b60533f3f5d530e971d6737ca6d58681ee434818fab630c83a734bb10c083ce8"},
