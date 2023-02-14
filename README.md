@@ -1,4 +1,4 @@
-# MLDEPLOY
+# J.A.M.S - Just Another ML Server
 
 gRPC service for serving tree based ML models and sklearn pipelines.
 
@@ -21,9 +21,9 @@ Once the server is running, the client will be responsible for adding models.
 
 If the user wants to use their own models, simply add the models in the **artefacts** folder.
 
-Alternatively, if your models are stored in some blob storage, the client will be responsible for implementing the following logic:
+Alternatively, if your models are stored in some third party storage, the client will be responsible for implementing the following logic:
 
-- connecting to blob storage
+- connecting to storage
 - download model file to **artefacts** folder
 - invoke **Deploy** endpoint with **model_name**
 
