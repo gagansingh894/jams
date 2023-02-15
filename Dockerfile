@@ -24,3 +24,4 @@ RUN poetry install
 RUN mkdir mldeploy
 RUN mkdir artefacts
 COPY /mldeploy /app/mldeploy
+CMD ["poetry", "run", "python", "-m", "mldeploy.main"]
