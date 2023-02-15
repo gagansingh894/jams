@@ -14,7 +14,7 @@ class Manager:
 
     __slots__ = 'logger', 'worker_pool', 'num_versions', 'path', 'models'
 
-    def __init__(self, path: str = 'artefacts/', num_worker: int = 1, num_versions: int = 5):
+    def __init__(self, path: str = 'artefacts', num_worker: int = 1, num_versions: int = 5):
         self.logger = structlog.getLogger(self.__class__.__name__)
         self.worker_pool = concurrent.futures.ProcessPoolExecutor(num_worker)
         self.num_versions = num_versions
