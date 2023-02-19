@@ -1,5 +1,4 @@
 import asyncio
-import concurrent.futures
 from datetime import datetime
 import functools
 import os
@@ -14,9 +13,8 @@ class Manager:
 
     __slots__ = 'logger', 'worker_pool', 'num_versions', 'path', 'models'
 
-    def __init__(self, path: str = 'artefacts', num_worker: int = 1, num_versions: int = 5):
+    def __init__(self, path: str = 'artefacts', num_versions: int = 5):
         self.logger = structlog.getLogger(self.__class__.__name__)
-        self.worker_pool = concurrent.futures.ProcessPoolExecutor(num_worker)
         self.num_versions = num_versions
         self.path = path
         self.models = {}
@@ -69,5 +67,5 @@ class Manager:
         else:
             models = self.models[model_name]
             model = models[len(models)]['model']
-        result = await loop.run_in_executor(self.worker_pool, functools.partial(utils.predict, input_data, model))
+        result = await loop.run_in_executor(utils.worker_pool, functools.partial(utils.predict, input_data, model))
         return result

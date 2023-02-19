@@ -1,4 +1,6 @@
+import concurrent.futures
 import json
+import os
 import typing
 
 import catboost
@@ -7,6 +9,9 @@ import lightgbm
 import pandas as pd
 import sklearn.pipeline
 import xgboost
+
+num_worker = os.getenv("NUM_WORKERS") if os.getenv("NUM_WORKERS") else 1
+worker_pool = concurrent.futures.ProcessPoolExecutor(num_worker)
 
 _not_implemented_error = NotImplementedError('only regression/classification models are supported')
 
@@ -24,16 +29,9 @@ def loader(path: str, framework: str, task: str) -> typing.Union[catboost.CatBoo
     elif framework == 'lightgbm':
         return lightgbm.Booster(model_file=path)
     elif framework == 'xgboost':
-        if task == 'regression':
-            m = xgboost.XGBRegressor()
-            m.load_model(fname=path)
-            return m
-        elif task == 'classification':
-            m = xgboost.XGBClassifier()
-            m.load_model(fname=path)
-            return m
-        else:
-            raise _not_implemented_error
+        m = xgboost.Booster()
+        m.load_model(fname=path)
+        return m
     else:
         try:
             obj = joblib.load(filename=path)
