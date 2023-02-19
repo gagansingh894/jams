@@ -44,7 +44,7 @@ class DeploymentServiceServicer(mldeploy_pb2_grpc.DeploymentServiceServicer):
                                                                  request.version)
             context.set_code(grpc.StatusCode.OK)
             return mldeploy_pb2.PredictResponse(model_name=request.model_name, predictions=predictions)
-        except Exception:
+        except Exception as e:
             context.set_code(grpc.StatusCode.INTERNAL)
-            context.set_details(f'failed to get predictions for model: {request.model_name}')
+            context.set_details(f'failed to get predictions for model: {request.model_name}. Error: {str(e)}')
             return mldeploy_pb2.PredictResponse()
